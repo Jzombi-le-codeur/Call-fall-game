@@ -29,6 +29,9 @@ class Player(pygame.sprite.Sprite): #Créer la classe du joueur
         if self.health > amount: #Vérifier le nombre de vies
             self.health -= amount #Infliger des dégâts au joueur
 
+        else: #Si le monstre n'a plus de vies
+            self.game.game_over() #Afficher l'écran du Game Over
+
     def move_right(self): #Méthode pour déplacer le joueur à droite
         """Vérifier les collisions"""
         if not self.game.check_collision(self, self.game.all_monsters): #Vérifier les collisions
