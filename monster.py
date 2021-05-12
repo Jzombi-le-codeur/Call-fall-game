@@ -31,6 +31,10 @@ class Monster(pygame.sprite.Sprite): #Créer la classe des monstres
             self.velocity = random.randint(1, 3) #Changer la vitesse de l'entité
             self.health = self.max_health #Réinitialiser les vies de l'entité
 
+        if self.game.comet_event.is_full_loaded():
+            self.game.all_monsters.remove(self)
+            self.game.comet_event.attempt_fall()
+
     def check_collision(self, sprite, group): #Méthode pour la collision du monstre
         """Vérifier les collisions"""
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask) #Retourner les collisions

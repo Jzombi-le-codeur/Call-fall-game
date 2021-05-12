@@ -2,6 +2,7 @@
 import pygame #Importer la bibliothèque Pygame
 from player import Player #Importer la classe du joueur
 from monster import Monster #Importer la classe des monstres
+from comet_event import CometFallEvent
 
 """Définir la classe du jeu"""
 class Game: #Créer la classe du jeu
@@ -13,6 +14,7 @@ class Game: #Créer la classe du jeu
         self.all_players.add(self.player) #Ajouter le joueur au groupe
         self.all_monsters = pygame.sprite.Group() #Créer le groupe des monstres
         self.pressed = {} #Définir le dictionnaire pour savoir si des touches sont pressées
+        self.comet_event = CometFallEvent(self)
 
 
     def start(self): #Méthode pour lancer le jeu
@@ -33,19 +35,27 @@ class Game: #Créer la classe du jeu
         self.all_monsters = pygame.sprite.Group() #Supprimer tous les monstres
         self.player.health = self.player.max_health #Réinitialiser les vies du joueur
         self.is_playing = False #Afficher le menu du jeu
+        self.comet_event.all_comets = pygame.sprite.Group() #Supprimer les comètes
+        self.comet_event.reset_percent() #Réinitialiser le pourcentage
 
     def update(self, screen): #Mettre à jour le jeu quand il est lancé
         screen.blit(self.player.image, self.player.rect)  # Afficher le joueur sur la fenêtre
         self.player.all_projectiles.draw(screen)  # Dessiner les projectiles sur la fenêtre
         self.all_monsters.draw(screen)  # Afficher les monstres sur la fenêtre
+        self.comet_event.all_comets.draw(screen) #Dessiner sur la fenêtre les comètes
 
-        """Actualiser la barre de vies du joueur"""
-        self.player.updade_health_bar(screen)  # Actualiser la barre de vies du joueur
+        """Actualiser les barres"""
+        self.player.updade_health_bar(screen) # Actualiser la barre de vies du joueur
+        self.comet_event.update_bar(screen) #Actualiser la barre des comètes
 
         """Déplacer les éléments"""
         """Déplacer le projectile"""
         for projectile in self.player.all_projectiles:  # Dans Projectile
             projectile.move()  # Faire déplacer les projectile
+
+        for comet in self.comet_event.all_comets:
+            comet.fall()
+
 
         """Récupérer les monstres dans le main"""
         for monster in self.all_monsters:  # Dans Projectile
