@@ -1,18 +1,18 @@
 """Importer les bibliothèques/modules"""
 import pygame #Importer la bibliothèque Pygame
 from projectile import Projectile #Importer la classe du projectile
+import animation #Importer le module animation
 
 """Définir la classe du joueur"""
-class Player(pygame.sprite.Sprite): #Créer la classe du joueur
+class Player(animation.AnimateSprite): #Créer la classe du joueur
     """Définir les attributs"""
     def __init__(self, game): #Créer le constructeur de la classe
-        super().__init__() #Dire à pygame que le joueur est un élément graphique du jeu
+        super().__init__("player") #Dire à pygame que le joueur est un élément graphique du jeu
         self.game = game
         self.health = 100 #Définir le nombre de vies initial du joueur
         self.max_health = 100 #Définir le nombre maximum de vies du joueur
         self.attack = 10 #Définir les points d'attaque du joueur
         self.velocity = 5 #Définir la vitesse du joueur
-        self.image = pygame.image.load("assets/player.png") #Charger l'image du joueur
         self.rect = self.image.get_rect() #Avoir la position du joueur
         self.rect.x = 400 #Définir l'abcisse du joueur
         self.rect.y = 500 #Définir l'ordonnée du joueur
@@ -32,6 +32,9 @@ class Player(pygame.sprite.Sprite): #Créer la classe du joueur
         else: #Si le monstre n'a plus de vies
             self.game.game_over() #Afficher l'écran du Game Over
 
+    def update_animation(self):
+        self.animate()
+
     def move_right(self): #Méthode pour déplacer le joueur à droite
         """Vérifier les collisions"""
         if not self.game.check_collision(self, self.game.all_monsters): #Vérifier les collisions
@@ -45,3 +48,4 @@ class Player(pygame.sprite.Sprite): #Créer la classe du joueur
     def launch_projectile(self): #Méthode pour lancer des projectiles
         """Envoyer les projectiles"""
         self.all_projectiles.add(Projectile(self)) #Créer un nouveau projectile
+        self.start_animation()
