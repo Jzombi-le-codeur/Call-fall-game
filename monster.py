@@ -6,8 +6,8 @@ import animation #Importer le module animation
 """Définir la classe des monstres"""
 class Monster(animation.AnimateSprite): #Créer la classe des monstres
     """Définir les attributs"""
-    def __init__(self, game): #Créer le constructeur de la classe
-        super().__init__("mummy") #Dire à pygame que les monstres sont des éléments graphiques du jeu
+    def __init__(self, game, name, size, offset=0): #Créer le constructeur de la classe
+        super().__init__(name, size) #Dire à pygame que les monstres sont des éléments graphiques du jeu
         self.game = game #Stocker la classe Game
         self.health = 100 #Définir le nombre de vies des monstres
         self.max_health = 100 #Définir le nombre de vies maximal des monstres
@@ -15,10 +15,13 @@ class Monster(animation.AnimateSprite): #Créer la classe des monstres
         self.velocity = random.randint(1, 3) #Définir la vitesse des monstres
         self.rect = self.image.get_rect() #Demander les positions des joueurs
         self.rect.x = 1000 + random.randint(0, 300) #Définir l'abcisse des monstres
-        self.rect.y = 540 #Définir l'ordonée des monstres
+        self.rect.y = 540 - offset #Définir l'ordonée des monstres
         self.start_animation()
 
     """Définir les méthodes"""
+    def set_speed(self, speed): #Définir la méthode pour définir les vitesses des sprites
+        self.default_speed = speed #Définir la vitesse par défaut
+        self.velocity = random.randint(1, 3)  # Définir la vitesse des monstres
 
     def update_animation(self):
         self.animate(loop=True)
@@ -33,7 +36,7 @@ class Monster(animation.AnimateSprite): #Créer la classe des monstres
         self.health -= amount #Infliger des dégâts aux monstres
         if self.health <= 0: #Vérifier si l'entité est morte
             self.rect.x = 1000 + random.randint(0, 300)#Réinitialiser l'abcisse de l'entité
-            self.velocity = random.randint(1, 3) #Changer la vitesse de l'entité
+            self.velocity = random.randint(1, self.default_speed) #Changer la vitesse de l'entité
             self.health = self.max_health #Réinitialiser les vies de l'entité
 
             if self.game.comet_event.is_full_loaded():
@@ -51,3 +54,21 @@ class Monster(animation.AnimateSprite): #Créer la classe des monstres
             self.rect.x -= self.velocity #Faire déplacer vers la gauche les monstres
         else: #Vérifier les collisions
             self.game.player.damage(self.attack)
+
+"""Définir les classes des monstres"""
+"""Définir la classe des momies"""
+class Mummy(Monster): #Créer la classe des mommies
+    """Définir les attributs"""
+    def __init__(self, game): #Définir les infos des momies
+        super().__init__(game, "mummy", (130, 130)) #Définir les infos des momies
+        self.set_speed(3) #Définir la vitesse des momies
+
+"""Définir la classe de l'alien"""
+class Alien(Monster): #Créer la classe de l'alien
+    """Définir les attributs"""
+    def __init__(self, game): #Définir le constructeur de l'alien
+        super().__init__(game, "alien", (300, 300), 130) #Définir les informations de l'alien
+        self.health = 250 #Définir le nombre de vies initiales de l'alien
+        self.max_health = 250 #Définir le nombre de vies maximal de l'alien
+        self.attack = 0.8 #Définir les points d'attaque de l'alien
+        self.set_speed(1) #Définir la vitesse de l'alien
