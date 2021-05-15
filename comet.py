@@ -17,6 +17,7 @@ class Comet(pygame.sprite.Sprite): #Créer la classe des comètes
     """Définir les méthodes"""
     def remove(self): #Définir la méthode pour supprimer une comète
         self.comet_event.all_comets.remove(self) #Supprimer une comète
+        self.comet_event.game.sound_manager.play("meteorite")  # Jouer le son des météorites
         if len(self.comet_event.all_comets) == 0: #Action s'exécutant si il n'y a plus de comètes
             self.comet_event.reset_percent() #Réinitialiser la barre des comètes
             self.comet_event.game.start() #Faire apparaître les monstres

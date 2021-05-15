@@ -3,7 +3,10 @@ import pygame #Importer la bibliothèque Pygame
 from player import Player #Importer la classe du joueur
 from monster import Mummy #Importer la classe des momies
 from monster import Alien #Importer la classe des aliens
-from comet_event import CometFallEvent
+from comet_event import CometFallEvent #Importer la classe des comètes
+from sounds import SoundManager #Importer la classe des sons
+
+pygame.init()
 
 """Définir la classe du jeu"""
 class Game: #Créer la classe du jeu
@@ -15,7 +18,10 @@ class Game: #Créer la classe du jeu
         self.all_players.add(self.player) #Ajouter le joueur au groupe
         self.all_monsters = pygame.sprite.Group() #Créer le groupe des monstres
         self.pressed = {} #Définir le dictionnaire pour savoir si des touches sont pressées
-        self.comet_event = CometFallEvent(self)
+        self.comet_event = CometFallEvent(self) #Stocker la classe des comètes
+        self.score = 0 #Définir la score initial
+        self.font = pygame.font.Font("assets/Righteous-Regular.ttf", 25)  # Créer la police du texte du score
+        self.sound_manager = SoundManager() #Stocker la classe des sons
 
     def spawn_monster(self, monster_name): #Définir la méthode pour faire spawner les monstres
         """Faire spawner les monstres"""
@@ -37,12 +43,22 @@ class Game: #Créer la classe du jeu
         self.is_playing = False #Afficher le menu du jeu
         self.comet_event.all_comets = pygame.sprite.Group() #Supprimer les comètes
         self.comet_event.reset_percent() #Réinitialiser le pourcentage
+        self.score = 0 #Réinitialiser le score
+        self.sound_manager.play("game_over") #Jouer le son du Game Over
+
+    def add_score(self, points): #Définir une méthode pour définir le nombre de points à ajouter au score
+        self.score += points  #Ajouter des points au score
 
     def update(self, screen): #Mettre à jour le jeu quand il est lancé
+        """Afficher le score sur l'écran"""
+        score_text = self.font.render(f"Score: {self.score}", 1, (0, 0, 0)) #Créer le texte du score
+
+        """Dessiner les éléments"""
         screen.blit(self.player.image, self.player.rect)  # Afficher le joueur sur la fenêtre
         self.player.all_projectiles.draw(screen)  # Dessiner les projectiles sur la fenêtre
         self.all_monsters.draw(screen)  # Afficher les monstres sur la fenêtre
         self.comet_event.all_comets.draw(screen) #Dessiner sur la fenêtre les comètes
+        screen.blit(score_text, (20, 20))  # Dessiner le score du texte
 
         """Actualiser les barres"""
         self.player.updade_health_bar(screen) # Actualiser la barre de vies du joueur

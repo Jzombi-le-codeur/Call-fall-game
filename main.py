@@ -64,5 +64,6 @@ while running: #Boucle tant que que le jeu est exécuté
         elif event.type == pygame.MOUSEBUTTONDOWN: #Action s'exécutant si le clic gauche est pressé
             if play_button_rect.collidepoint(event.pos): #Action s'exécutant si la souris touche le bouton
                 game.start() #Lancer le jeu
+                game.sound_manager.play("click") #Jouer le son du clic
 
     clock.tick(FPS) #Définir la vitesse du jeu

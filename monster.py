@@ -16,15 +16,19 @@ class Monster(animation.AnimateSprite): #Créer la classe des monstres
         self.rect = self.image.get_rect() #Demander les positions des joueurs
         self.rect.x = 1000 + random.randint(0, 300) #Définir l'abcisse des monstres
         self.rect.y = 540 - offset #Définir l'ordonée des monstres
-        self.start_animation()
+        self.start_animation() #Démarrer l'animation
+        self.loot_amount = 10 #Définir le nombre de points par défaut à ajouter au score
 
     """Définir les méthodes"""
     def set_speed(self, speed): #Définir la méthode pour définir les vitesses des sprites
         self.default_speed = speed #Définir la vitesse par défaut
         self.velocity = random.randint(1, 3)  # Définir la vitesse des monstres
 
-    def update_animation(self):
-        self.animate(loop=True)
+    def set_loot_amount(self, amount):
+        self.loot_amount = amount
+
+    def update_animation(self): #Définir la méthode pour mettre à jour l'animation
+        self.animate(loop=True) #Activer l'animation
 
     def updade_health_bar(self, surface): #Méthode pour définir la barre de vies
         """Dessiner la barre de vie"""
@@ -38,6 +42,7 @@ class Monster(animation.AnimateSprite): #Créer la classe des monstres
             self.rect.x = 1000 + random.randint(0, 300)#Réinitialiser l'abcisse de l'entité
             self.velocity = random.randint(1, self.default_speed) #Changer la vitesse de l'entité
             self.health = self.max_health #Réinitialiser les vies de l'entité
+            self.game.add_score(self.loot_amount) #Ajouter des points au score
 
             if self.game.comet_event.is_full_loaded():
                 self.game.all_monsters.remove(self)
@@ -62,6 +67,7 @@ class Mummy(Monster): #Créer la classe des mommies
     def __init__(self, game): #Définir les infos des momies
         super().__init__(game, "mummy", (130, 130)) #Définir les infos des momies
         self.set_speed(3) #Définir la vitesse des momies
+        self.set_loot_amount(20) #Ajouter 20 points au score
 
 """Définir la classe de l'alien"""
 class Alien(Monster): #Créer la classe de l'alien
@@ -72,3 +78,4 @@ class Alien(Monster): #Créer la classe de l'alien
         self.max_health = 250 #Définir le nombre de vies maximal de l'alien
         self.attack = 0.8 #Définir les points d'attaque de l'alien
         self.set_speed(1) #Définir la vitesse de l'alien
+        self.set_loot_amount(80)  # Ajouter  80 points au score
