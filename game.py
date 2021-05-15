@@ -1,7 +1,8 @@
 """Importer les modules"""
 import pygame #Importer la bibliothèque Pygame
 from player import Player #Importer la classe du joueur
-from monster import Monster #Importer la classe des monstres
+from monster import Mummy #Importer la classe des momies
+from monster import Alien #Importer la classe des aliens
 from comet_event import CometFallEvent
 
 """Définir la classe du jeu"""
@@ -16,15 +17,15 @@ class Game: #Créer la classe du jeu
         self.pressed = {} #Définir le dictionnaire pour savoir si des touches sont pressées
         self.comet_event = CometFallEvent(self)
 
-    def spawn_monster(self): #Définir la méthode pour faire spawner les monstres
+    def spawn_monster(self, monster_name): #Définir la méthode pour faire spawner les monstres
         """Faire spawner les monstres"""
-        monster = Monster(self) #Définir la variable monster
-        self.all_monsters.add(monster) #Ajouter un monstre au groupe de monstres
+        self.all_monsters.add(monster_name.__call__(self)) #Ajouter des monstres au groupe
 
     def start(self): #Méthode pour lancer le jeu
         self.is_playing = True
-        self.spawn_monster()  # Faire apparaître un monstre
-        self.spawn_monster()  # Faire apparaître un monstre
+        self.spawn_monster(Mummy) #Faire apparaître un momie
+        self.spawn_monster(Mummy) #Faire apparaître une momie
+        self.spawn_monster(Alien) #Faire apparaître un alien
 
     def check_collision(self, sprite, group):
         """Vérifier les collisions"""
@@ -46,22 +47,22 @@ class Game: #Créer la classe du jeu
         """Actualiser les barres"""
         self.player.updade_health_bar(screen) # Actualiser la barre de vies du joueur
         self.comet_event.update_bar(screen) #Actualiser la barre des comètes
-        self.player.update_animation()
+        self.player.update_animation() #Mettre à jour l'animation du joueur
 
         """Déplacer les éléments"""
         """Déplacer le projectile"""
         for projectile in self.player.all_projectiles:  # Dans Projectile
             projectile.move()  # Faire déplacer les projectile
 
-        for comet in self.comet_event.all_comets:
-            comet.fall()
+        for comet in self.comet_event.all_comets: #Dans les comètes
+            comet.fall() #Faire tomber la pluie de comètes
 
 
         """Récupérer les monstres dans le main"""
         for monster in self.all_monsters:  # Dans Projectile
             monster.forward()  # Faire déplacer les projectile
             monster.updade_health_bar(screen) # Dessiner la barre de vie sur la fenêtre
-            monster.update_animation()
+            monster.update_animation() #Mettre à jour les animations du monstre
 
         """Vérifier la direction du joueur"""
         if self.pressed.get(pygame.K_RIGHT) and self.player.rect.x + self.player.rect.width < screen.get_width():  # Vérifier

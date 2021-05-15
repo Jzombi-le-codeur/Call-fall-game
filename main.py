@@ -3,6 +3,10 @@ from game import Game #Importer la classe du jeu
 import pygame #Importer la bibliothèque pygame
 import math #Importer la bibliothèque Math
 
+"""Définir une clock"""
+clock = pygame.time.Clock() #Définir la clock
+FPS = 60 #Définir le nombre de fps
+
 """Créer et personnaliser la fenêtre"""
 pygame.display.set_caption("Call fall game") #Créer une fenêtre et définir son titre
 screen = pygame.display.set_mode((1080, 720)) #Définir les dimensions de la fenêtre
@@ -60,3 +64,5 @@ while running: #Boucle tant que que le jeu est exécuté
         elif event.type == pygame.MOUSEBUTTONDOWN: #Action s'exécutant si le clic gauche est pressé
             if play_button_rect.collidepoint(event.pos): #Action s'exécutant si la souris touche le bouton
                 game.start() #Lancer le jeu
+
+    clock.tick(FPS) #Définir la vitesse du jeu
