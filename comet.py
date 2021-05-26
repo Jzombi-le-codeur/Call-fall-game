@@ -1,6 +1,7 @@
 """Importer les bibliothèques/modules"""
 import pygame #Importer la bibliothèque Pygame
 import random #Importer la bibliothèque Random
+import time #Importer la bibliothèque Time
 
 """Définir la classe des comètes"""
 class Comet(pygame.sprite.Sprite): #Créer la classe des comètes

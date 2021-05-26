@@ -21,7 +21,7 @@ class Monster(animation.AnimateSprite): #Créer la classe des monstres
     """Définir les méthodes"""
     def set_speed(self, speed): #Définir la méthode pour définir les vitesses des sprites
         self.default_speed = speed #Définir la vitesse par défaut
-        self.velocity = random.randint(1, self.default_speed)
+        self.velocity = random.randint(1, self.default_speed) #Définir la vitesse
 
     def set_loot_amount(self, amount):
         self.loot_amount = amount

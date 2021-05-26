@@ -32,21 +32,20 @@ class Game: #Créer la classe du jeu
         """Faire spawner les monstres"""
         self.all_monsters.add(monster_name.__call__(self)) #Ajouter des monstres au groupe
 
-
     def start(self): #Méthode pour lancer le jeu
         self.is_playing = True #Lancer le jeu
         """Faire spawner les monstres en fonction du niveau"""
         if self.level == 1: #Action s'exécutant si on est au niveau 1
             self.spawn_monster(Mummy) # Faire apparaître un momie
 
-        elif self.level == 2: #Action s'exécutant si on est au niveau 3
+        elif self.level == 2: #Action s'exécutant si on est au niveau 2
             self.spawn_monster(Mummy) # Faire apparaître une momie
             self.spawn_monster(Mummy)  # Faire apparaître un momie
 
-        elif self.level == 3: #Action s'exécutant si on est au niveau 4
+        elif self.level == 3: #Action s'exécutant si on est au niveau 3
             self.spawn_monster(Alien) # Faire apparaître un alien
 
-        else: #Action s'exécutant si on est à un niveau d'au moins 6
+        else: #Action s'exécutant si on est à un niveau d'au moins 4
             self.spawn_monster(Mummy)  # Faire apparaître un momie
             self.spawn_monster(Mummy)  # Faire apparaître un momie
             self.spawn_monster(Alien)  # Faire apparaître un alien

@@ -36,6 +36,6 @@ class Projectile(pygame.sprite.Sprite): #Créer la classe du projectile
 
     def rotate(self):  # Méthode pour faire tourner le projectile
         """Faire tourner le projectile"""
-        self.angle += 12
+        self.angle += 12 #Définir la rotation
         self.image = pygame.transform.rotozoom(self.origin_image, self.angle, 1) #Définir la rotation du projectile
         self.rect = self.image.get_rect(center = self.rect.center) #Définir le centre de rotation du projectile
