@@ -26,7 +26,7 @@ play_button = pygame.transform.scale(play_button, (400, 150)) #Redimensionner le
 play_button_rect = play_button.get_rect() #Demander la position du bouton
 play_button_rect.x = math.ceil(screen.get_width() / 3.33) #Définir l'abcisse du bouton
 play_button_rect.y = math.ceil(screen.get_height() / 2)
-game = Game() #Charger le jeu
+game = Game()#Charger le jeu
 
 """Définir la boucle du jeu"""
 running = True #Lancer le jeu
@@ -60,6 +60,7 @@ while running: #Boucle tant que que le jeu est exécuté
 
         elif event.type == pygame.KEYUP:
             game.pressed[event.key] = False #Signaler qu'aucune touche n'est pressée
+
 
         elif event.type == pygame.MOUSEBUTTONDOWN: #Action s'exécutant si le clic gauche est pressé
             if play_button_rect.collidepoint(event.pos): #Action s'exécutant si la souris touche le bouton

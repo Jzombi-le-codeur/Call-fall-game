@@ -12,7 +12,6 @@ class Monster(animation.AnimateSprite): #Créer la classe des monstres
         self.health = 100 #Définir le nombre de vies des monstres
         self.max_health = 100 #Définir le nombre de vies maximal des monstres
         self.attack = 0.3 #Définir les points d'attaque des joueurs
-        self.velocity = random.randint(1, 3) #Définir la vitesse des monstres
         self.rect = self.image.get_rect() #Demander les positions des joueurs
         self.rect.x = 1000 + random.randint(0, 300) #Définir l'abcisse des monstres
         self.rect.y = 540 - offset #Définir l'ordonée des monstres
@@ -22,7 +21,7 @@ class Monster(animation.AnimateSprite): #Créer la classe des monstres
     """Définir les méthodes"""
     def set_speed(self, speed): #Définir la méthode pour définir les vitesses des sprites
         self.default_speed = speed #Définir la vitesse par défaut
-        self.velocity = random.randint(1, 3)  # Définir la vitesse des monstres
+        self.velocity = random.randint(1, self.default_speed)
 
     def set_loot_amount(self, amount):
         self.loot_amount = amount
@@ -40,13 +39,12 @@ class Monster(animation.AnimateSprite): #Créer la classe des monstres
         self.health -= amount #Infliger des dégâts aux monstres
         if self.health <= 0: #Vérifier si l'entité est morte
             self.rect.x = 1000 + random.randint(0, 300)#Réinitialiser l'abcisse de l'entité
-            self.velocity = random.randint(1, self.default_speed) #Changer la vitesse de l'entité
             self.health = self.max_health #Réinitialiser les vies de l'entité
             self.game.add_score(self.loot_amount) #Ajouter des points au score
-
-            if self.game.comet_event.is_full_loaded():
-                self.game.all_monsters.remove(self)
-                self.game.comet_event.attempt_fall()
+            """Quand la barre est chargée"""
+            if self.game.comet_event.is_full_loaded(): #Action s'exécutant si la barre est chargée
+                self.game.all_monsters.remove(self) #Supprimer un monstre
+                self.game.comet_event.attempt_fall() #Lancer la pluie de comètes
 
     def check_collision(self, sprite, group): #Méthode pour la collision du monstre
         """Vérifier les collisions"""
@@ -58,7 +56,8 @@ class Monster(animation.AnimateSprite): #Créer la classe des monstres
             """Faire déplacer vers la gauche les monstres"""
             self.rect.x -= self.velocity #Faire déplacer vers la gauche les monstres
         else: #Vérifier les collisions
-            self.game.player.damage(self.attack)
+            self.game.player.damage(self.attack) #Infliger des dégâts aux monstres
+
 
 """Définir les classes des monstres"""
 """Définir la classe des momies"""
@@ -66,8 +65,9 @@ class Mummy(Monster): #Créer la classe des mommies
     """Définir les attributs"""
     def __init__(self, game): #Définir les infos des momies
         super().__init__(game, "mummy", (130, 130)) #Définir les infos des momies
-        self.set_speed(3) #Définir la vitesse des momies
         self.set_loot_amount(20) #Ajouter 20 points au score
+        self.set_speed(3)  # Définir la vitesse des momies
+
 
 """Définir la classe de l'alien"""
 class Alien(Monster): #Créer la classe de l'alien
@@ -78,4 +78,4 @@ class Alien(Monster): #Créer la classe de l'alien
         self.max_health = 250 #Définir le nombre de vies maximal de l'alien
         self.attack = 0.8 #Définir les points d'attaque de l'alien
         self.set_speed(1) #Définir la vitesse de l'alien
-        self.set_loot_amount(80)  # Ajouter  80 points au score
+        self.set_loot_amount(80)  # Ajouter 80 points au score

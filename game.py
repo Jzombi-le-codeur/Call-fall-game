@@ -1,5 +1,7 @@
 """Importer les modules"""
 import pygame #Importer la bibliothèque Pygame
+import monster #Importer le module Monster
+from monster import Monster #Importer le classe Monster
 from player import Player #Importer la classe du joueur
 from monster import Mummy #Importer la classe des momies
 from monster import Alien #Importer la classe des aliens
@@ -20,31 +22,63 @@ class Game: #Créer la classe du jeu
         self.pressed = {} #Définir le dictionnaire pour savoir si des touches sont pressées
         self.comet_event = CometFallEvent(self) #Stocker la classe des comètes
         self.score = 0 #Définir la score initial
+        self.level = 1  #Définir le niveau initial
+        self.life = 3  # Définir le nombre de vies global initial
         self.font = pygame.font.Font("assets/Righteous-Regular.ttf", 25)  # Créer la police du texte du score
         self.sound_manager = SoundManager() #Stocker la classe des sons
+        self.monster = monster
 
     def spawn_monster(self, monster_name): #Définir la méthode pour faire spawner les monstres
         """Faire spawner les monstres"""
         self.all_monsters.add(monster_name.__call__(self)) #Ajouter des monstres au groupe
 
+
     def start(self): #Méthode pour lancer le jeu
-        self.is_playing = True
-        self.spawn_monster(Mummy) #Faire apparaître un momie
-        self.spawn_monster(Mummy) #Faire apparaître une momie
-        self.spawn_monster(Alien) #Faire apparaître un alien
+        self.is_playing = True #Lancer le jeu
+        """Faire spawner les monstres en fonction du niveau"""
+        if self.level == 1: #Action s'exécutant si on est au niveau 1
+            self.spawn_monster(Mummy) # Faire apparaître un momie
+
+        elif self.level == 2: #Action s'exécutant si on est au niveau 3
+            self.spawn_monster(Mummy) # Faire apparaître une momie
+            self.spawn_monster(Mummy)  # Faire apparaître un momie
+
+        elif self.level == 3: #Action s'exécutant si on est au niveau 4
+            self.spawn_monster(Alien) # Faire apparaître un alien
+
+        else: #Action s'exécutant si on est à un niveau d'au moins 6
+            self.spawn_monster(Mummy)  # Faire apparaître un momie
+            self.spawn_monster(Mummy)  # Faire apparaître un momie
+            self.spawn_monster(Alien)  # Faire apparaître un alien
+
+    def add_level(self): #Méthode pour changer de niveau
+        self.level += 1 #Changer de niveau
 
     def check_collision(self, sprite, group):
         """Vérifier les collisions"""
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask) #Vérifier les collisions
 
     def game_over(self): #Méthode pour réinitialiser le jeu
-        self.all_monsters = pygame.sprite.Group() #Supprimer tous les monstres
-        self.player.health = self.player.max_health #Réinitialiser les vies du joueur
-        self.is_playing = False #Afficher le menu du jeu
-        self.comet_event.all_comets = pygame.sprite.Group() #Supprimer les comètes
-        self.comet_event.reset_percent() #Réinitialiser le pourcentage
-        self.score = 0 #Réinitialiser le score
-        self.sound_manager.play("game_over") #Jouer le son du Game Over
+        if self.life <= 0:
+            self.all_monsters = pygame.sprite.Group() #Supprimer tous les monstres
+            self.player.health = self.player.max_health #Réinitialiser les vies du joueur
+            self.is_playing = False #Afficher le menu du jeu
+            self.comet_event.all_comets = pygame.sprite.Group() #Supprimer les comètes
+            self.comet_event.reset_percent() #Réinitialiser le pourcentage
+            self.score = 0 #Réinitialiser le score
+            self.sound_manager.play("game_over") #Jouer le son du Game Over
+            self.life = 3
+            self.level = 1
+
+    def remove_life(self):
+        self.life -= 1
+        self.player.health = self.player.max_health  # Réinitialiser les vies du joueur
+        self.comet_event.all_comets = pygame.sprite.Group()  # Supprimer les comètes
+        self.comet_event.reset_percent()  # Réinitialiser le pourcentage
+        self.all_monsters = pygame.sprite.Group()  # Supprimer tous les monstres
+        self.comet_event.game.start()  # Faire apparaître les monstres
+        self.player.rect.x = 400  # Définir l'abcisse du joueur
+
 
     def add_score(self, points): #Définir une méthode pour définir le nombre de points à ajouter au score
         self.score += points  #Ajouter des points au score
@@ -52,13 +86,17 @@ class Game: #Créer la classe du jeu
     def update(self, screen): #Mettre à jour le jeu quand il est lancé
         """Afficher le score sur l'écran"""
         score_text = self.font.render(f"Score: {self.score}", 1, (0, 0, 0)) #Créer le texte du score
+        level_text = self.font.render(f"Niveau: {self.level}", 1, (0, 0, 0))  # Créer le texte du niveau
+        life_text = self.font.render(f"Vies: {self.life}", 1, (0, 0, 0))  # Créer le texte des vies globales
 
         """Dessiner les éléments"""
         screen.blit(self.player.image, self.player.rect)  # Afficher le joueur sur la fenêtre
         self.player.all_projectiles.draw(screen)  # Dessiner les projectiles sur la fenêtre
         self.all_monsters.draw(screen)  # Afficher les monstres sur la fenêtre
         self.comet_event.all_comets.draw(screen) #Dessiner sur la fenêtre les comètes
-        screen.blit(score_text, (20, 20))  # Dessiner le score du texte
+        screen.blit(score_text, (20, 20))  # Dessiner le texte du score
+        screen.blit(level_text, (20, 60))  # Dessiner le texte du niveau
+        screen.blit(life_text, (20, 100))  # Dessiner le texte des vies globales
 
         """Actualiser les barres"""
         self.player.updade_health_bar(screen) # Actualiser la barre de vies du joueur

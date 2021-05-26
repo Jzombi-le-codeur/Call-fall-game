@@ -16,7 +16,7 @@ class Player(animation.AnimateSprite): #Créer la classe du joueur
         self.rect = self.image.get_rect() #Avoir la position du joueur
         self.rect.x = 400 #Définir l'abcisse du joueur
         self.rect.y = 500 #Définir l'ordonnée du joueur
-        self.all_projectiles = pygame.sprite.Group()
+        self.all_projectiles = pygame.sprite.Group() #Définir le groupe des projectiles
 
     """Définir les méthodes"""
     def updade_health_bar(self, surface): #Méthode pour définir la barre de vies
@@ -26,11 +26,14 @@ class Player(animation.AnimateSprite): #Créer la classe du joueur
 
     def damage(self, amount): #Méthode pour infliger des dégâts au joueur
         """Infliger des dégâts au joueur"""
-        if self.health > amount: #Vérifier le nombre de vies
+        if self.health > amount and self.game.life > 0: #Vérifier le nombre de vies
             self.health -= amount #Infliger des dégâts au joueur
 
-        else: #Si le monstre n'a plus de vies
-            self.game.game_over() #Afficher l'écran du Game Over
+        if self.health <= amount:
+            self.game.remove_life()
+            if self.game.life <= 0:
+                self.game.game_over()
+
 
     def update_animation(self):
         self.animate()
