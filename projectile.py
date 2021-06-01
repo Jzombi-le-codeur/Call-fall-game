@@ -29,7 +29,12 @@ class Projectile(pygame.sprite.Sprite): #Créer la classe du projectile
         for monster in self.player.game.check_collision(self, self.player.game.all_monsters): #Vérifier les collisions
             self.remove() #Supprimer le projectile
             """Infliger des dégâts aux monstres"""
-            monster.damage(5) #Infliger des dégâts aux monstres
+            monster.damage(self.player.attack) #Infliger des dégâts aux monstres
+
+        for boss in self.player.game.check_collision(self, self.player.game.all_boss):
+            self.remove() #Supprimer le projectile
+            boss.damage(self.player.attack) #Infliger des dégâts au boss
+
         """Vérifier que le projectile n'est plus sur l'écran"""
         if self.rect.x > 1080: #Vérifier que le projectile est à la bordure
             self.remove() #Supprimer le projectile

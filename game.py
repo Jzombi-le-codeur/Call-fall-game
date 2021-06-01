@@ -7,6 +7,7 @@ from monster import Mummy #Importer la classe des momies
 from monster import Alien #Importer la classe des aliens
 from comet_event import CometFallEvent #Importer la classe des comètes
 from sounds import SoundManager #Importer la classe des sons
+from boss import Boss #Importer la classe du boss
 
 pygame.init()
 
@@ -15,6 +16,7 @@ class Game: #Créer la classe du jeu
     """Définir les attributs du jeu"""
     def __init__(self): #Créer le constructeur de la classe
         self.is_playing = False #Dire que le jeu n'as pas commencé
+        self.end_game = False #Signaler que le jeu n'est pas terminé
         self.all_players = pygame.sprite.Group() #Créer le groupe du joueur
         self.player = Player(self) #Ajouter le joueur au jeu
         self.all_players.add(self.player) #Ajouter le joueur au groupe
@@ -26,7 +28,9 @@ class Game: #Créer la classe du jeu
         self.life = 3  # Définir le nombre de vies global initial
         self.font = pygame.font.Font("assets/Righteous-Regular.ttf", 25)  # Créer la police du texte du score
         self.sound_manager = SoundManager() #Stocker la classe des sons
-        self.monster = monster
+        self.all_boss = pygame.sprite.Group() #Créer le groupe du monstre
+        self.boss = Boss(self) #Stocker la classe du boss
+        self.all_boss.add(self.boss)  # Ajouter un boss au groupe de boss
 
     def spawn_monster(self, monster_name): #Définir la méthode pour faire spawner les monstres
         """Faire spawner les monstres"""
@@ -35,17 +39,17 @@ class Game: #Créer la classe du jeu
     def start(self): #Méthode pour lancer le jeu
         self.is_playing = True #Lancer le jeu
         """Faire spawner les monstres en fonction du niveau"""
-        if self.level == 1: #Action s'exécutant si on est au niveau 1
-            self.spawn_monster(Mummy) # Faire apparaître un momie
-
-        elif self.level == 2: #Action s'exécutant si on est au niveau 2
-            self.spawn_monster(Mummy) # Faire apparaître une momie
+        if self.level == 1:  # Action s'exécutant si on est au niveau 1
             self.spawn_monster(Mummy)  # Faire apparaître un momie
 
-        elif self.level == 3: #Action s'exécutant si on est au niveau 3
-            self.spawn_monster(Alien) # Faire apparaître un alien
+        elif self.level == 2:  # Action s'exécutant si on est au niveau 2
+            self.spawn_monster(Mummy)  # Faire apparaître une momie
+            self.spawn_monster(Mummy)  # Faire apparaître un momie
 
-        else: #Action s'exécutant si on est à un niveau d'au moins 4
+        elif self.level == 3:  # Action s'exécutant si on est au niveau 3
+            self.spawn_monster(Alien)  # Faire apparaître un alien
+
+        else:  # Action s'exécutant si on est à un niveau d'au moins 4
             self.spawn_monster(Mummy)  # Faire apparaître un momie
             self.spawn_monster(Mummy)  # Faire apparaître un momie
             self.spawn_monster(Alien)  # Faire apparaître un alien
@@ -68,6 +72,13 @@ class Game: #Créer la classe du jeu
             self.sound_manager.play("game_over") #Jouer le son du Game Over
             self.life = 3
             self.level = 1
+
+    def end(self):
+        self.end_game = True #Signaler que le jeu est terminé
+        self.all_monsters = pygame.sprite.Group()  # Supprimer tous les monstres
+        self.player.health = self.player.max_health  # Réinitialiser les vies du joueur
+        self.comet_event.all_comets = pygame.sprite.Group()  # Supprimer les comètes
+        self.comet_event.reset_percent()  # Réinitialiser le pourcentage
 
     def remove_life(self):
         self.life -= 1
@@ -92,15 +103,17 @@ class Game: #Créer la classe du jeu
         screen.blit(self.player.image, self.player.rect)  # Afficher le joueur sur la fenêtre
         self.player.all_projectiles.draw(screen)  # Dessiner les projectiles sur la fenêtre
         self.all_monsters.draw(screen)  # Afficher les monstres sur la fenêtre
-        self.comet_event.all_comets.draw(screen) #Dessiner sur la fenêtre les comètes
+        self.comet_event.all_comets.draw(screen)  # Dessiner sur la fenêtre les comètes
         screen.blit(score_text, (20, 20))  # Dessiner le texte du score
         screen.blit(level_text, (20, 60))  # Dessiner le texte du niveau
         screen.blit(life_text, (20, 100))  # Dessiner le texte des vies globales
+        screen.blit(self.boss.image, self.boss.rect)  # Afficher le joueur sur la fenêtre
 
         """Actualiser les barres"""
-        self.player.updade_health_bar(screen) # Actualiser la barre de vies du joueur
+        self.player.updade_health_bar(screen) #Actualiser la barre de vies du joueur
         self.comet_event.update_bar(screen) #Actualiser la barre des comètes
-        self.player.update_animation() #Mettre à jour l'animation du joueur
+        self.player.update_animation() #Actualiser l'animation du joueur
+        self.boss.update_health_bar(screen) #Actualiser la barre de vies du joueur
 
         """Déplacer les éléments"""
         """Déplacer le projectile"""
@@ -121,8 +134,9 @@ class Game: #Créer la classe du jeu
         if self.pressed.get(pygame.K_RIGHT) and self.player.rect.x + self.player.rect.width < screen.get_width():  # Vérifier
             # que la touche gauche est pressée et que le joueur ne dépasse pas la bordure
             # droite
-            self.player.move_right()  # Si c'est le cas déplacer le joueur à droite
+            self.player.move_right()  # Déplacer le joueur à droite
+            self.boss.move_right() #Déplacer le boss à droite
 
         elif self.pressed.get(pygame.K_LEFT) and self.player.rect.x > 0:  # Vérifier que la touche gauche est pressée et que
             # le joueur ne dépasse pas la bordure gauche
-            self.player.move_left()  # Si c'est le cas déplacer le joueur à gauche
+            self.player.move_left()  # Déplacer le joueur à gauche

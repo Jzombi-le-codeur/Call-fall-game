@@ -36,12 +36,16 @@ while running: #Boucle tant que que le jeu est exécuté
     screen.blit(background, (0, -200)) #Afficher l'arrière-plan sur la fenêtre
 
     """Vérifier si le jeu a commencé"""
-    if game.is_playing:
+    if game.is_playing and game.end_game is False:
         game.update(screen)
 
-    else: #Vérifier si le jeu n'a pas commencé
+    elif game.is_playing and game.end_game:
+        game.end()
+
+    elif game.is_playing is False and game.end_game is False: #Vérifier si le jeu n'a pas commencé
         screen.blit(play_button, play_button_rect)
         screen.blit(banner, banner_rect) #Afficher la bannière
+
 
     pygame.display.flip() #Mettre à jour le jeu
 

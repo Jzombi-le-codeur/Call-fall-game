@@ -32,7 +32,7 @@ class Monster(animation.AnimateSprite): #Créer la classe des monstres
     def updade_health_bar(self, surface): #Méthode pour définir la barre de vies
         """Dessiner la barre de vie"""
         pygame.draw.rect(surface, (60, 63, 60), [self.rect.x + 10, self.rect.y - 20, self.max_health, 5])  # Dessiner l'arrière-plan de la barre de vies
-        pygame.draw.rect(surface, (111, 210, 46), [self.rect.x + 10, self.rect.y - 20, self.health, 5]) #Dessiner la barre de vies
+        pygame.draw.rect(surface, (111, 210, 46), [self.rect.x + 10, self.rect.y - 20, self.health, 5])  # Dessiner la barre de vies
 
     def damage(self, amount): #Méthode pour infliger des dégâts aux monstres
         """Infliger des dégâts aux monstres"""

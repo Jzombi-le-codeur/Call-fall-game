@@ -8,10 +8,10 @@ class Player(animation.AnimateSprite): #Créer la classe du joueur
     """Définir les attributs"""
     def __init__(self, game): #Créer le constructeur de la classe
         super().__init__("player") #Dire à pygame que le joueur est un élément graphique du jeu
-        self.game = game
+        self.game = game #Avoir la classe game dans cette classe
         self.health = 100 #Définir le nombre de vies initial du joueur
         self.max_health = 100 #Définir le nombre maximum de vies du joueur
-        self.attack = 10 #Définir les points d'attaque du joueur
+        self.attack = 5 #Définir les points d'attaque du joueur
         self.velocity = 5 #Définir la vitesse du joueur
         self.rect = self.image.get_rect() #Avoir la position du joueur
         self.rect.x = 400 #Définir l'abcisse du joueur
@@ -21,8 +21,8 @@ class Player(animation.AnimateSprite): #Créer la classe du joueur
     """Définir les méthodes"""
     def updade_health_bar(self, surface): #Méthode pour définir la barre de vies
         """Dessiner la barre de vie"""
-        pygame.draw.rect(surface, (60, 63, 60), [self.rect.x + 50, self.rect.y + 20, self.max_health, 7])  # Dessiner l'arrière-plan de la barre de vies
-        pygame.draw.rect(surface, (111, 210, 46), [self.rect.x + 50, self.rect.y + 20, self.health, 7]) #Dessiner la barre de vies
+        pygame.draw.rect(surface, (60, 63, 60), [self.rect.x + 50, self.rect.y + 20, self.max_health, 5])  # Dessiner l'arrière-plan de la barre de vies
+        pygame.draw.rect(surface, (111, 210, 46), [self.rect.x + 50, self.rect.y + 20, self.health, 5]) #Dessiner la barre de vies
 
     def damage(self, amount): #Méthode pour infliger des dégâts au joueur
         """Infliger des dégâts au joueur"""
