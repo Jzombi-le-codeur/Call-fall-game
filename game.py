@@ -30,11 +30,13 @@ class Game: #Créer la classe du jeu
         self.sound_manager = SoundManager() #Stocker la classe des sons
         self.all_boss = pygame.sprite.Group() #Créer le groupe du monstre
         self.boss = Boss(self) #Stocker la classe du boss
-        self.all_boss.add(self.boss)  # Ajouter un boss au groupe de boss
 
     def spawn_monster(self, monster_name): #Définir la méthode pour faire spawner les monstres
         """Faire spawner les monstres"""
         self.all_monsters.add(monster_name.__call__(self)) #Ajouter des monstres au groupe
+
+    def spawn_boss(self):
+        self.all_boss.add(self.boss)  # Ajouter un boss au groupe de boss
 
     def start(self): #Méthode pour lancer le jeu
         self.is_playing = True #Lancer le jeu
@@ -48,6 +50,9 @@ class Game: #Créer la classe du jeu
 
         elif self.level == 3:  # Action s'exécutant si on est au niveau 3
             self.spawn_monster(Alien)  # Faire apparaître un alien
+
+        elif self.level == 9:
+            self.spawn_boss()
 
         else:  # Action s'exécutant si on est à un niveau d'au moins 4
             self.spawn_monster(Mummy)  # Faire apparaître un momie
@@ -107,13 +112,15 @@ class Game: #Créer la classe du jeu
         screen.blit(score_text, (20, 20))  # Dessiner le texte du score
         screen.blit(level_text, (20, 60))  # Dessiner le texte du niveau
         screen.blit(life_text, (20, 100))  # Dessiner le texte des vies globales
-        screen.blit(self.boss.image, self.boss.rect)  # Afficher le joueur sur la fenêtre
+        if self.level == 10:
+            screen.blit(self.boss.image, self.boss.rect)  # Afficher le joueur sur la fenêtre
 
         """Actualiser les barres"""
         self.player.updade_health_bar(screen) #Actualiser la barre de vies du joueur
         self.comet_event.update_bar(screen) #Actualiser la barre des comètes
         self.player.update_animation() #Actualiser l'animation du joueur
-        self.boss.update_health_bar(screen) #Actualiser la barre de vies du joueur
+        if self.level == 10:
+            self.boss.update_health_bar(screen) #Actualiser la barre de vies du joueur
 
         """Déplacer les éléments"""
         """Déplacer le projectile"""
@@ -135,7 +142,6 @@ class Game: #Créer la classe du jeu
             # que la touche gauche est pressée et que le joueur ne dépasse pas la bordure
             # droite
             self.player.move_right()  # Déplacer le joueur à droite
-            self.boss.move_right() #Déplacer le boss à droite
 
         elif self.pressed.get(pygame.K_LEFT) and self.player.rect.x > 0:  # Vérifier que la touche gauche est pressée et que
             # le joueur ne dépasse pas la bordure gauche
