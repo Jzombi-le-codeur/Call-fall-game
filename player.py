@@ -13,6 +13,9 @@ class Player(animation.AnimateSprite): #Créer la classe du joueur
         self.max_health = 100 #Définir le nombre maximum de vies du joueur
         self.attack = 5 #Définir les points d'attaque du joueur
         self.velocity = 5 #Définir la vitesse du joueur
+        self.jump = 0 #Définir la valeur de saut
+        self.jump_high = 0 #Définir la montée du saut
+        #self.jump_low =
         self.rect = self.image.get_rect() #Avoir la position du joueur
         self.rect.x = 400 #Définir l'abcisse du joueur
         self.rect.y = 500 #Définir l'ordonnée du joueur

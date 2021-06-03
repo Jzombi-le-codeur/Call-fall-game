@@ -24,7 +24,7 @@ class Game: #Créer la classe du jeu
         self.pressed = {} #Définir le dictionnaire pour savoir si des touches sont pressées
         self.comet_event = CometFallEvent(self) #Stocker la classe des comètes
         self.score = 0 #Définir la score initial
-        self.level = 1  #Définir le niveau initial
+        self.level = 10  #Définir le niveau initial
         self.life = 3  # Définir le nombre de vies global initial
         self.font = pygame.font.Font("assets/Righteous-Regular.ttf", 25)  # Créer la police du texte du score
         self.sound_manager = SoundManager() #Stocker la classe des sons
@@ -42,7 +42,7 @@ class Game: #Créer la classe du jeu
         self.is_playing = True #Lancer le jeu
         """Faire spawner les monstres en fonction du niveau"""
         if self.level == 1:  # Action s'exécutant si on est au niveau 1
-            self.spawn_monster(Mummy)  # Faire apparaître un momie
+            self.spawn_monster(Mummy)
 
         elif self.level == 2:  # Action s'exécutant si on est au niveau 2
             self.spawn_monster(Mummy)  # Faire apparaître une momie
@@ -51,13 +51,18 @@ class Game: #Créer la classe du jeu
         elif self.level == 3:  # Action s'exécutant si on est au niveau 3
             self.spawn_monster(Alien)  # Faire apparaître un alien
 
-        elif self.level == 9:
+
+        elif self.level == 10:
+            self.all_monsters = pygame.sprite.Group()
             self.spawn_boss()
 
-        else:  # Action s'exécutant si on est à un niveau d'au moins 4
+        else:
             self.spawn_monster(Mummy)  # Faire apparaître un momie
             self.spawn_monster(Mummy)  # Faire apparaître un momie
             self.spawn_monster(Alien)  # Faire apparaître un alien
+
+    def event_boss(self):
+        self.boss.move()
 
     def add_level(self): #Méthode pour changer de niveau
         self.level += 1 #Changer de niveau
@@ -136,6 +141,8 @@ class Game: #Créer la classe du jeu
             monster.forward()  # Faire déplacer les projectile
             monster.updade_health_bar(screen) # Dessiner la barre de vie sur la fenêtre
             monster.update_animation() #Mettre à jour les animations du monstre
+
+        self.boss.go_and_back()
 
         """Vérifier la direction du joueur"""
         if self.pressed.get(pygame.K_RIGHT) and self.player.rect.x + self.player.rect.width < screen.get_width():  # Vérifier
