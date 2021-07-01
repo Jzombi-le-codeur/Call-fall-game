@@ -36,9 +36,13 @@ class CometFallEvent: #Créer la classe de la barre des comètes
             for i in range(1, 16):  # Répéter 15 fois l'action suivante
                 self.all_comets.add(Comet(self))  # Ajouter une comète au groupe
 
-        else:  # Action s'exécutant si le niveau est au moins à 4
+        elif self.game.level == 10:
+            for i in range(1, 10):
+                self.all_comets.add(Comet(self))
+
+        else:  # Action s'exécutant si le niveau est au moins à 4 mais n'atteint pas le niveau 10
             for i in range(1, 21):  # Répéter 20 fois l'action suivante
-                self.all_comets.add(Comet(self))  # Ajouter une comète au groupe
+                self.all_comets.add(Comet(self))  # Ajouter une comète au groupew
 
     def attempt_fall(self): #Définir la méthode pour activer la pluie de comètes
         """Activer la pluie de comètes"""

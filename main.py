@@ -59,16 +59,19 @@ while running: #Boucle tant que que le jeu est exécuté
         if event.type == pygame.KEYDOWN: #Action s'exécutant si une touche du clavier est pressée
             game.pressed[event.key] = True #Signaler qu'une touche est pressée
             """Détecter si la touche espace est pressée pour lancer le projectile"""
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE and game.projectile is True:
                 game.player.launch_projectile()
+
+            elif event.key == pygame.K_0:
+                game.boss.monster()
 
         elif event.type == pygame.KEYUP:
             game.pressed[event.key] = False #Signaler qu'aucune touche n'est pressée
-
 
         elif event.type == pygame.MOUSEBUTTONDOWN: #Action s'exécutant si le clic gauche est pressé
             if play_button_rect.collidepoint(event.pos): #Action s'exécutant si la souris touche le bouton
                 game.start() #Lancer le jeu
                 game.sound_manager.play("click") #Jouer le son du clic
+
 
     clock.tick(FPS) #Définir la vitesse du jeu

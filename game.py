@@ -30,6 +30,8 @@ class Game: #Créer la classe du jeu
         self.sound_manager = SoundManager() #Stocker la classe des sons
         self.all_boss = pygame.sprite.Group() #Créer le groupe du monstre
         self.boss = Boss(self) #Stocker la classe du boss
+        self.projectile = True
+        self.event = 1
 
     def spawn_monster(self, monster_name): #Définir la méthode pour faire spawner les monstres
         """Faire spawner les monstres"""
@@ -61,14 +63,17 @@ class Game: #Créer la classe du jeu
             self.spawn_monster(Mummy)  # Faire apparaître un momie
             self.spawn_monster(Alien)  # Faire apparaître un alien
 
-    def event_boss(self):
-        self.boss.move()
+    def block_projectile(self):
+        if self.boss.rect.x == 800:
+            self.projectile = False
+
+        elif self.boss.rect.x == 600:
+            self.projectile = True
 
     def add_level(self): #Méthode pour changer de niveau
         self.level += 1 #Changer de niveau
 
     def check_collision(self, sprite, group):
-        """Vérifier les collisions"""
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask) #Vérifier les collisions
 
     def game_over(self): #Méthode pour réinitialiser le jeu
@@ -135,14 +140,20 @@ class Game: #Créer la classe du jeu
         for comet in self.comet_event.all_comets: #Dans les comètes
             comet.fall() #Faire tomber la pluie de comètes
 
+        """Appeler les évènements d'action du boss"""
+        self.boss.go_and_back()
+        self.boss.fly()
+        self.block_projectile()
+        if self.boss.rect.x == 800:
+            self.event += 1
+            if (self.event % 2) == 0:
+                self.spawn_monster(Mummy)
 
         """Récupérer les monstres dans le main"""
         for monster in self.all_monsters:  # Dans Projectile
             monster.forward()  # Faire déplacer les projectile
             monster.updade_health_bar(screen) # Dessiner la barre de vie sur la fenêtre
             monster.update_animation() #Mettre à jour les animations du monstre
-
-        self.boss.go_and_back()
 
         """Vérifier la direction du joueur"""
         if self.pressed.get(pygame.K_RIGHT) and self.player.rect.x + self.player.rect.width < screen.get_width():  # Vérifier

@@ -1,5 +1,6 @@
 """Importer les bibliothèques/modules"""
 import pygame #Importer la bibliothèque Pygame
+import os #Importer la bibliothèque Os
 
 """Définir la classe pour animer les sprites"""
 class AnimateSprite(pygame.sprite.Sprite): #Créer la classe pour animer les sprites
