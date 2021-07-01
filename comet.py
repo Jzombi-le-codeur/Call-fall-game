@@ -10,7 +10,7 @@ class Comet(pygame.sprite.Sprite): #Créer la classe des comètes
         super().__init__() #Dire à pygame que les comètes sont des éléments graphiques du jeu
         self.image = pygame.image.load("assets/comet.png") #Importer l'image des comètes
         self.rect = self.image.get_rect() #Demander la position des comètes
-        self.velocity = random.randint(1, 3) #Définir la vitesse des comètes+
+        self.velocity = random.randint(1, 3) #Définir la vitesse des comètes
         self.rect.y = - random.randint(0, 800) #Définir l'ordonnée des comètes
         self.comet_event = comet_event #Stocker le module de la barre des comètes
 
