@@ -34,6 +34,8 @@ running = True #Lancer le jeu
 while running: #Boucle tant que que le jeu est exécuté
     """Mettre les images sur la fenêtre"""
     screen.blit(background, (0, -200)) #Afficher l'arrière-plan sur la fenêtre
+    if game.end_game is True:
+        screen.blit(game.end_text, (225, 20))
 
     """Vérifier si le jeu a commencé"""
     if game.is_playing and game.end_game is False:

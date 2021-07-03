@@ -32,6 +32,10 @@ class Game: #Créer la classe du jeu
         self.boss = Boss(self) #Stocker la classe du boss
         self.projectile = True
         self.event = 1
+        self.score_text = self.font.render(f"Score: {self.score}", 1, (0, 0, 0))  # Créer le texte du score
+        self.level_text = self.font.render(f"Level: {self.level}", 1, (0, 0, 0))  # Créer le texte du niveau
+        self.life_text = self.font.render(f"Lifes: {self.life}", 1, (0, 0, 0))  # Créer le texte des vies globales
+        self.end_text = self.font.render("Congratulations ! You have completed the game !!!", 1,(0, 0, 0))  # Créer le texte des vies globales
 
     def spawn_monster(self, monster_name): #Définir la méthode pour faire spawner les monstres
         """Faire spawner les monstres"""
@@ -110,24 +114,15 @@ class Game: #Créer la classe du jeu
         self.score += points  #Ajouter des points au score
 
     def update(self, screen): #Mettre à jour le jeu quand il est lancé
-        """Afficher le score sur l'écran"""
-        score_text = self.font.render(f"Score: {self.score}", 1, (0, 0, 0)) #Créer le texte du score
-        level_text = self.font.render(f"Level: {self.level}", 1, (0, 0, 0))  # Créer le texte du niveau
-        life_text = self.font.render(f"Lifes: {self.life}", 1, (0, 0, 0))  # Créer le texte des vies globales
-        end_text = self.font.render("Congratulations ! You have completed the game !!!", 1, (0, 0, 0))  # Créer le texte des vies globales
-
         """Dessiner les éléments"""
         screen.blit(self.player.image, self.player.rect)  # Afficher le joueur sur la fenêtre
         self.player.all_projectiles.draw(screen)  # Dessiner les projectiles sur la fenêtre
         self.all_monsters.draw(screen)  # Afficher les monstres sur la fenêtre
         self.comet_event.all_comets.draw(screen)  # Dessiner sur la fenêtre les comètes
         if self.end_game is False:
-            screen.blit(score_text, (20, 20))  # Dessiner le texte du score
-            screen.blit(level_text, (20, 60))  # Dessiner le texte du niveau
-            screen.blit(life_text, (20, 100))  # Dessiner le texte des vies globales
-
-        elif self.end_game is True:
-            screen.blit(end_text, (20, 20))  # Dessiner le texte de fin
+            screen.blit(self.score_text, (20, 20))  # Dessiner le texte du score
+            screen.blit(self.level_text, (20, 60))  # Dessiner le texte du niveau
+            screen.blit(self.life_text, (20, 100))  # Dessiner le texte des vies globales
 
         if self.level == 10:
             screen.blit(self.boss.image, self.boss.rect)  # Afficher le joueur sur la fenêtre
