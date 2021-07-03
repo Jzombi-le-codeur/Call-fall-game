@@ -11,6 +11,7 @@ class Comet(pygame.sprite.Sprite): #Créer la classe des comètes
         self.image = pygame.image.load("assets/comet.png") #Importer l'image des comètes
         self.rect = self.image.get_rect() #Demander la position des comètes
         self.velocity = random.randint(1, 3) #Définir la vitesse des comètes
+        self.rect.x = random.randint(20, 1000)
         self.rect.y = - random.randint(0, 800) #Définir l'ordonnée des comètes
         self.comet_event = comet_event #Stocker le module de la barre des comètes
 
@@ -33,6 +34,7 @@ class Comet(pygame.sprite.Sprite): #Créer la classe des comètes
             if len(self.comet_event.all_comets) == 0: #Action s'exécutant si il n'y a plus de comètes
                 self.comet_event.reset_percent() #Réinitialiser la barre des comètes
                 self.comet_event.fall_mode = False #Désactiver la pluie de comètes
+                self.comet_event.game.block_projectile()
 
         if self.comet_event.game.check_collision(self, self.comet_event.game.all_players): #Action s'exécutant si une comète touche le joueur
             self.remove() #Appeler la méthode pour supprimer une comète

@@ -16,7 +16,7 @@ class Boss(pygame.sprite.Sprite): #Créer la classe du boss
         self.velocity = 200 #Définir la vitesse initiale du boss
         self.speed_move = 2.5 #Définir la vitesse de mouvement
         self.event = 0
-        self.image = pygame.image.load("assets/boss/boss1.png")
+        self.image = pygame.image.load("assets/boss.png")
         self.image = pygame.transform.scale(self.image, (300, 300))
         self.rect = self.image.get_rect()  # Avoir la position du boss
         self.rect.x = 600  # Définir l'abcisse du boss
@@ -39,7 +39,6 @@ class Boss(pygame.sprite.Sprite): #Créer la classe du boss
             """Faire bouger le boss"""
             self.rect.x = self.init_x + self.velocity * math.sin(math.radians(self.moving_x))  # Définir le mouvement du boss
             self.moving_x += self.speed_moving_x  # Faire bouger le boss
-            print(self.rect.x)
 
         else: #Vérifier les collisions
             self.game.player.damage(self.attack) #Infliger des dégâts aux monstres
