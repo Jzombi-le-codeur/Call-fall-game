@@ -45,7 +45,6 @@ class Boss(pygame.sprite.Sprite): #Créer la classe du boss
 
     def fly(self):  # Définir la fonction pour faire bouger le boss
         if not self.game.check_collision(self, self.game.all_players):  # Vérifier les collisions
-            """"""
             self.rect.y = self.init_y + self.velocity * math.cos(math.radians(self.moving_y))  # Définir le mouvement du boss
             self.moving_y += self.speed_moving_y  # Faire bouger le boss
 

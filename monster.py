@@ -46,15 +46,12 @@ class Monster(animation.AnimateSprite): #Créer la classe des monstres
                 self.game.all_monsters.remove(self) #Supprimer un monstre
                 self.game.comet_event.attempt_fall() #Lancer la pluie de comètes
 
-    def check_collision(self, sprite, group): #Méthode pour la collision du monstre
-        """Vérifier les collisions"""
-        return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask) #Retourner les collisions
-
     def forward(self): #Définir la méthode pour faire marcher le joueur
         """Vérifier les collisions"""
         if not self.game.check_collision(self, self.game.all_players): #Vérifier les collisions
             """Faire déplacer vers la gauche les monstres"""
             self.rect.x -= self.velocity #Faire déplacer vers la gauche les monstres
+
         else: #Vérifier les collisions
             self.game.player.damage(self.attack) #Infliger des dégâts aux monstres
 
