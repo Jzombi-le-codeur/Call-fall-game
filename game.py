@@ -26,7 +26,7 @@ class Game: #Créer la classe du jeu
         self.score = 0 #Définir la score initial
         self.font = pygame.font.Font("assets/Righteous-Regular.ttf", 25)  # Créer la police du texte du score
         self.sound_manager = SoundManager() #Stocker la classe des sons
-        self.level = 1  # Définir le niveau initial
+        self.level = 10  # Définir le niveau initial
         self.life = 3  # Définir le nombre de vies global initial
         self.all_boss = pygame.sprite.Group()  # Créer le groupe du monstre
         self.boss = Boss(self)  # Stocker la classe du boss
@@ -114,6 +114,9 @@ class Game: #Créer la classe du jeu
         self.sound_manager.play("game_over") #Jouer le son du Game Over
         self.level = 1
         self.life = 3
+        
+    def add_level(self):
+        self.level += 1
 
     def add_score(self, points): #Définir une méthode pour définir le nombre de points à ajouter au score
         self.score += points  #Ajouter des points au score
