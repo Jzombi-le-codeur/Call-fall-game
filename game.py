@@ -8,6 +8,7 @@ from monster import Alien #Importer la classe des aliens
 from comet_event import CometFallEvent #Importer la classe des comètes
 from sounds import SoundManager #Importer la classe des sons
 from boss import Boss #Importer la classe du boss
+import json
 
 pygame.init()
 
@@ -26,13 +27,25 @@ class Game: #Créer la classe du jeu
         self.score = 0 #Définir la score initial
         self.font = pygame.font.Font("assets/Righteous-Regular.ttf", 25)  # Créer la police du texte du score
         self.sound_manager = SoundManager() #Stocker la classe des sons
-        self.level = 9  # Définir le niveau initial
-        self.life = 3  # Définir le nombre de vies global initial
         self.all_boss = pygame.sprite.Group()  # Créer le groupe du monstre
         self.boss = Boss(self)  # Stocker la classe du boss
         self.projectile = True
         self.event = 1
         self.end_text = self.font.render("Congratulations ! You have completed the game !!!", 1,(0, 0, 0))  # Créer le texte des vies globales
+        self.general_data = {}
+        self.recovback()
+
+    def register(self):
+        self.general_data["level"] = self.level
+        self.general_data["lives"] = self.life
+        with open("data.json", "w") as database:
+            json.dump(self.general_data, database)
+
+    def recovback(self):
+        database = open("data.json").read()
+        data = json.loads(database)
+        self.level = data["level"]
+        self.life = data["lives"]
 
     def spawn_boss(self):
         self.all_boss.add(self.boss)  # Ajouter un boss au groupe de boss

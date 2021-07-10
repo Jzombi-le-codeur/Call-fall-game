@@ -24,6 +24,7 @@ class Comet(pygame.sprite.Sprite): #Créer la classe des comètes
             self.comet_event.game.start() #Faire apparaître les monstres
             if self.comet_event.game.level != 10:
                 self.comet_event.game.add_level()
+                self.comet_event.game.register()
 
     def fall(self): #Définir la méthode pour faire tomber les comètes
         self.rect.y += self.velocity #Faire tomber les comètes

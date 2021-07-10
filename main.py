@@ -55,6 +55,7 @@ while running: #Boucle tant que que le jeu est exécuté
         """Arrêter le jeu"""
         if event.type == pygame.QUIT: #Action s'exécutant si le jeu doit s'arrêter
             running = False #Stopper le jeu
+            game.register()
             pygame.quit() #Fermer la fenêtre
 
         """Détecter une touche du clavier"""
@@ -63,9 +64,6 @@ while running: #Boucle tant que que le jeu est exécuté
             """Détecter si la touche espace est pressée pour lancer le projectile"""
             if event.key == pygame.K_SPACE and game.projectile is True:
                 game.player.launch_projectile()
-
-            elif event.key == pygame.K_0:
-                game.boss.monster()
 
         elif event.type == pygame.KEYUP:
             game.pressed[event.key] = False #Signaler qu'aucune touche n'est pressée
