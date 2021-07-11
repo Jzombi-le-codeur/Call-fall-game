@@ -48,11 +48,11 @@ class Monster(animation.AnimateSprite): #Créer la classe des monstres
 
     def forward(self): #Définir la méthode pour faire marcher le joueur
         """Vérifier les collisions"""
-        if not self.game.check_collision(self, self.game.all_players): #Vérifier les collisions
+        if not self.game.check_collision(self, self.game.all_players) and self.game.paused is False: #Vérifier les collisions
             """Faire déplacer vers la gauche les monstres"""
             self.rect.x -= self.velocity #Faire déplacer vers la gauche les monstres
 
-        else: #Vérifier les collisions
+        elif self.game.check_collision(self, self.game.all_players) and self.game.paused is False: #Vérifier les collisions
             self.game.player.damage(self.attack) #Infliger des dégâts aux monstres
 
 

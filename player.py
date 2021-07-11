@@ -60,4 +60,5 @@ class Player(animation.AnimateSprite):  # Créer la classe du joueur
         """Envoyer les projectiles"""
         self.all_projectiles.add(Projectile(self))  # Créer un nouveau projectile
         self.start_animation()  # Lancer l'animation du joueur
-        self.game.sound_manager.play("tir")  # Jouer le son du tir
+        if self.game.paused is False:
+            self.game.sound_manager.play("tir")  # Jouer le son du tir

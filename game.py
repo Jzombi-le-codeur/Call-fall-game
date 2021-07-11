@@ -31,6 +31,7 @@ class Game: #Créer la classe du jeu
         self.boss = Boss(self)  # Stocker la classe du boss
         self.projectile = True
         self.event = 1
+        self.paused = False
         self.end_text = self.font.render("Congratulations ! You have completed the game !!!", 1,(0, 0, 0))  # Créer le texte des vies globales
         self.general_data = {}
         self.recovback()
@@ -40,6 +41,13 @@ class Game: #Créer la classe du jeu
         self.general_data["lives"] = self.life
         with open("data.json", "w") as database:
             json.dump(self.general_data, database)
+
+    def pause(self):
+        if self.paused is False:
+            self.paused = True
+
+        else:
+            self.paused = False
 
     def recovback(self):
         database = open("data.json").read()
@@ -185,11 +193,11 @@ class Game: #Créer la classe du jeu
             monster.update_animation() #Mettre à jour les animations du monstre
 
         """Vérifier la direction du joueur"""
-        if self.pressed.get(pygame.K_RIGHT) and self.player.rect.x + self.player.rect.width < screen.get_width():  # Vérifier
+        if self.pressed.get(pygame.K_RIGHT) and self.player.rect.x + self.player.rect.width < screen.get_width() and self.paused is False:  # Vérifier
             # que la touche gauche est pressée et que le joueur ne dépasse pas la bordure
-            # droite
+            # droite et que le jeu n'est pas en pause
             self.player.move_right()  # Si c'est le cas déplacer le joueur à droite
 
-        elif self.pressed.get(pygame.K_LEFT) and self.player.rect.x > 0:  # Vérifier que la touche gauche est pressée et que
-            # le joueur ne dépasse pas la bordure gauche
+        elif self.pressed.get(pygame.K_LEFT) and self.player.rect.x > 0 and self.paused is False:  # Vérifier que la touche gauche est pressée, que
+            #et que le joueur ne dépasse pas la bordure gauche
             self.player.move_left()  # Si c'est le cas déplacer le joueur à gauche

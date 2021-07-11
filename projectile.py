@@ -22,8 +22,9 @@ class Projectile(pygame.sprite.Sprite): #Créer la classe du projectile
 
     def move(self): #Méthode pour déplacer le projectile
         """Définir l'animation du projectile"""
-        self.rect.x += self.velocity #Déplacer le projectile
-        self.rotate() #Faire tourner le projectile
+        if self.player.game.paused is False:
+            self.rect.x += self.velocity #Déplacer le projectile
+            self.rotate() #Faire tourner le projectile
 
         """Vérifier les collisions"""
         for monster in self.player.game.check_collision(self, self.player.game.all_monsters): #Vérifier les collisions

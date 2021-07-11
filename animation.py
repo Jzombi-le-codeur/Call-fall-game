@@ -19,7 +19,7 @@ class AnimateSprite(pygame.sprite.Sprite): #Créer la classe pour animer les spr
 
     def animate(self, loop=False): #Créer la méthode pour animer les sprites
         """Animer les sprites"""
-        if self.animation: #Action s'exécutant si les animations sont activées
+        if self.animation and self.game.paused is False: #Action s'exécutant si les animations sont activées
             self.current_image += 1 #Changer d'image d'annimation
             """Quand la dernière image est atteinte"""
             if self.current_image >= len(self.images): #Action s'exécutant si la dernière image du sprite est atteinte

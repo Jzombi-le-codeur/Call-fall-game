@@ -62,8 +62,11 @@ while running: #Boucle tant que que le jeu est exécuté
         if event.type == pygame.KEYDOWN: #Action s'exécutant si une touche du clavier est pressée
             game.pressed[event.key] = True #Signaler qu'une touche est pressée
             """Détecter si la touche espace est pressée pour lancer le projectile"""
-            if event.key == pygame.K_SPACE and game.projectile is True:
+            if event.key == pygame.K_SPACE and game.projectile is True and game.paused is False:
                 game.player.launch_projectile()
+
+            elif event.key == pygame.K_p:
+                game.pause()
 
         elif event.type == pygame.KEYUP:
             game.pressed[event.key] = False #Signaler qu'aucune touche n'est pressée

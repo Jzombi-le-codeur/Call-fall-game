@@ -35,20 +35,20 @@ class Boss(pygame.sprite.Sprite): #Créer la classe du boss
             self.game.end() #Dire que le jeu est terminé
 
     def go_and_back(self): #Définir la fonction pour faire bouger le boss
-        if not self.game.check_collision(self, self.game.all_players): #Vérifier les collisions
+        if not self.game.check_collision(self, self.game.all_players) and self.game.paused is False: #Vérifier les collisions
             """Faire bouger le boss"""
             self.rect.x = self.init_x + self.velocity * math.sin(math.radians(self.moving_x))  # Définir le mouvement du boss
             self.moving_x += self.speed_moving_x  # Faire bouger le boss
 
-        else: #Vérifier les collisions
+        elif self.game.check_collision(self, self.game.all_players) and self.game.paused is False: #Vérifier les collisions
             self.game.player.damage(self.attack) #Infliger des dégâts aux monstres
 
     def fly(self):  # Définir la fonction pour faire bouger le boss
-        if not self.game.check_collision(self, self.game.all_players):  # Vérifier les collisions
+        if not self.game.check_collision(self, self.game.all_players) and self.game.paused is False:  # Vérifier les collisions
             self.rect.y = self.init_y + self.velocity * math.cos(math.radians(self.moving_y))  # Définir le mouvement du boss
             self.moving_y += self.speed_moving_y  # Faire bouger le boss
 
-        else:  # Vérifier les collisions
+        elif self.game.check_collision(self, self.game.all_players) and self.game.paused is False:  # Vérifier les collisions
             self.game.player.damage(self.attack)  # Infliger des dégâts aux monstres
 
     def update_health_bar(self, surface): #Créer la fonction pour actualiser la barre de vies
