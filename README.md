@@ -16,7 +16,7 @@
 
 ## Controls
 
- Press the right arrow to move forward
- Press the left arrow to move back
- Press space to shoot
- Press p to pause
+ * Press the **right arrow** to **move forward**
+ * Press the **left arrow** to **move back**
+ * Press **space** to **shoot**
+ * Press **p** to **pause**
