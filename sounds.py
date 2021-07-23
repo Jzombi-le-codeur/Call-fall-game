@@ -15,8 +15,10 @@ class SoundManager:  # Créer la classe des sons
             'tir': pygame.mixer.Sound("assets/sounds/tir.ogg"),  # Importer le son du tir
 
         }
+        self.sound = True
 
     """Définir les méthodes"""
 
-    def play(self, name):  # Définir la méthode pour jouer les sons
-        self.sounds[name].play()  # Jouer les sons
+    def play_sound(self, name):  # Définir la méthode pour jouer les sons
+        if self.sound:
+            self.sounds[name].play()  # Jouer les sons

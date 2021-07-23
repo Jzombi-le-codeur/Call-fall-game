@@ -18,13 +18,14 @@ class Comet(pygame.sprite.Sprite): #Créer la classe des comètes
     """Définir les méthodes"""
     def remove(self): #Définir la méthode pour supprimer une comète
         self.comet_event.all_comets.remove(self) #Supprimer une comète
-        self.comet_event.game.sound_manager.play("meteorite")  # Jouer le son des météorites
+        self.comet_event.game.sound_manager.play_sound("meteorite")  # Jouer le son des météorites
         if len(self.comet_event.all_comets) == 0: #Action s'exécutant si il n'y a plus de comètes
             self.comet_event.reset_percent() #Réinitialiser la barre des comètes
             self.comet_event.game.start() #Faire apparaître les monstres
-            if self.comet_event.game.level != 10:
-                self.comet_event.game.add_level()
-                self.comet_event.game.register()
+            if self.comet_event.game.infinite is False:
+                if self.comet_event.game.level != 10:
+                    self.comet_event.game.add_level()
+                    self.comet_event.game.register()
 
     def fall(self): #Définir la méthode pour faire tomber les comètes
         if self.comet_event.game.paused is False:

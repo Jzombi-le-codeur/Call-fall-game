@@ -19,13 +19,19 @@ banner = pygame.transform.scale(banner, (500, 500)) #Redimensionner la bannière
 banner_rect = banner.get_rect() #Demander la position de la bannière
 banner_rect.x = math.ceil(screen.get_width() / 4) #Définir l'abcisse de la bannière
 
-
-#Charger le bouton
+"""Charger le bouton"""
 play_button = pygame.image.load("assets/button.png") #Charger le bouton
 play_button = pygame.transform.scale(play_button, (400, 150)) #Redimensionner le bouton
 play_button_rect = play_button.get_rect() #Demander la position du bouton
 play_button_rect.x = math.ceil(screen.get_width() / 3.33) #Définir l'abcisse du bouton
 play_button_rect.y = math.ceil(screen.get_height() / 2)
+
+play2_button = pygame.image.load("assets/Infini.png") #Charger le bouton
+play2_button = pygame.transform.scale(play2_button, (400, 150)) #Redimensionner le bouton
+play2_button_rect = play2_button.get_rect() #Demander la position du bouton
+play2_button_rect.x = math.ceil(screen.get_width() / 3.33) #Définir l'abcisse du bouton
+play2_button_rect.y = 500
+
 game = Game()#Charger le jeu
 
 """Définir la boucle du jeu"""
@@ -46,6 +52,7 @@ while running: #Boucle tant que que le jeu est exécuté
 
     elif game.is_playing is False and game.end_game is False: #Vérifier si le jeu n'a pas commencé
         screen.blit(play_button, play_button_rect)
+        screen.blit(play2_button, play2_button_rect)
         screen.blit(banner, banner_rect) #Afficher la bannière
 
 
@@ -73,8 +80,14 @@ while running: #Boucle tant que que le jeu est exécuté
 
         elif event.type == pygame.MOUSEBUTTONDOWN: #Action s'exécutant si le clic gauche est pressé
             if play_button_rect.collidepoint(event.pos): #Action s'exécutant si la souris touche le bouton
+                game.infinite = False
                 game.start() #Lancer le jeu
-                game.sound_manager.play("click") #Jouer le son du clic
+                game.sound_manager.play_sound("click") #Jouer le son du clic
+
+            elif play2_button_rect.collidepoint(event.pos):
+                game.infinite = True
+                game.start()
+                game.sound_manager.play_sound("click")  # Jouer le son du clic
 
 
     clock.tick(FPS) #Définir la vitesse du jeu

@@ -34,13 +34,15 @@ class Game: #Créer la classe du jeu
         self.paused = False
         self.end_text = self.font.render("Congratulations ! You have completed the game !!!", 1,(0, 0, 0))  # Créer le texte des vies globales
         self.general_data = {}
+        self.infinite = False
         self.recovback()
 
     def register(self):
-        self.general_data["level"] = self.level
-        self.general_data["lives"] = self.life
-        with open("data.json", "w") as database:
-            json.dump(self.general_data, database)
+        if self.infinite is False:
+            self.general_data["level"] = self.level
+            self.general_data["lives"] = self.life
+            with open("data.json", "w") as database:
+                json.dump(self.general_data, database)
 
     def pause(self):
         if self.paused is False:
@@ -50,10 +52,11 @@ class Game: #Créer la classe du jeu
             self.paused = False
 
     def recovback(self):
-        database = open("data.json").read()
-        data = json.loads(database)
-        self.level = data["level"]
-        self.life = data["lives"]
+        if self.infinite is False:
+            database = open("data.json").read()
+            data = json.loads(database)
+            self.level = data["level"]
+            self.life = data["lives"]
 
     def spawn_boss(self):
         self.all_boss.add(self.boss)  # Ajouter un boss au groupe de boss
@@ -63,24 +66,31 @@ class Game: #Créer la classe du jeu
         self.all_monsters.add(monster_name.__call__(self)) #Ajouter des monstres au groupe
 
     def start(self): #Méthode pour lancer le jeu
-        self.is_playing = True #Lancer le jeu
-        """Faire spawner les monstres en fonction du niveau"""
-        if self.level == 1:  # Action s'exécutant si on est au niveau 1
-            self.spawn_monster(Mummy)
+        if self.infinite is False:
+            self.is_playing = True #Lancer le jeu
+            """Faire spawner les monstres en fonction du niveau"""
+            if self.level == 1:  # Action s'exécutant si on est au niveau 1
+                self.spawn_monster(Mummy)
 
-        elif self.level == 2:  # Action s'exécutant si on est au niveau 2
-            self.spawn_monster(Mummy)  # Faire apparaître une momie
-            self.spawn_monster(Mummy)  # Faire apparaître un momie
+            elif self.level == 2:  # Action s'exécutant si on est au niveau 2
+                self.spawn_monster(Mummy)  # Faire apparaître une momie
+                self.spawn_monster(Mummy)  # Faire apparaître un momie
 
-        elif self.level == 3:  # Action s'exécutant si on est au niveau 3
-            self.spawn_monster(Alien)  # Faire apparaître un alien
+            elif self.level == 3:  # Action s'exécutant si on est au niveau 3
+                self.spawn_monster(Alien)  # Faire apparaître un alien
 
 
-        elif self.level == 10:
-            self.all_monsters = pygame.sprite.Group()
-            self.spawn_boss()
+            elif self.level == 10:
+                self.all_monsters = pygame.sprite.Group()
+                self.spawn_boss()
+
+            else:
+                self.spawn_monster(Mummy)  # Faire apparaître un momie
+                self.spawn_monster(Mummy)  # Faire apparaître un momie
+                self.spawn_monster(Alien)  # Faire apparaître un alien
 
         else:
+            self.is_playing = True
             self.spawn_monster(Mummy)  # Faire apparaître un momie
             self.spawn_monster(Mummy)  # Faire apparaître un momie
             self.spawn_monster(Alien)  # Faire apparaître un alien
@@ -93,7 +103,7 @@ class Game: #Créer la classe du jeu
             self.comet_event.all_comets = pygame.sprite.Group()  # Supprimer les comètes
             self.comet_event.reset_percent()  # Réinitialiser le pourcentage
             self.score = 0  # Réinitialiser le score
-            self.sound_manager.play("game_over")  # Jouer le son du Game Over
+            self.sound_manager.play_sound("game_over")  # Jouer le son du Game Over
             self.life = 3
             self.level = 1
 
@@ -132,10 +142,10 @@ class Game: #Créer la classe du jeu
         self.comet_event.all_comets = pygame.sprite.Group() #Supprimer les comètes
         self.comet_event.reset_percent() #Réinitialiser le pourcentage
         self.score = 0 #Réinitialiser le score
-        self.sound_manager.play("game_over") #Jouer le son du Game Over
+        self.sound_manager.play_sound("game_over") #Jouer le son du Game Over
         self.level = 1
         self.life = 3
-        
+
     def add_level(self):
         self.level += 1
 
@@ -155,8 +165,12 @@ class Game: #Créer la classe du jeu
         self.comet_event.all_comets.draw(screen) #Dessiner sur la fenêtre les comètes
         if self.end_game is False:
             screen.blit(self.score_text, (20, 20))  # Dessiner le texte du score
-            screen.blit(self.level_text, (20, 60))  # Dessiner le texte du niveau
-            screen.blit(self.life_text, (20, 100))  # Dessiner le texte des vies globales
+            if self.infinite:
+                screen.blit(self.life_text, (20, 60))  # Dessiner le texte des vies globales
+
+            elif self.infinite is False:
+                screen.blit(self.level_text, (20, 60))  # Dessiner le texte du niveau
+                screen.blit(self.life_text, (20, 100))  # Dessiner le texte des vies globales
 
         if self.level == 10:
             screen.blit(self.boss.image, self.boss.rect)  # Afficher le joueur sur la fenêtre
@@ -201,3 +215,10 @@ class Game: #Créer la classe du jeu
         elif self.pressed.get(pygame.K_LEFT) and self.player.rect.x > 0 and self.paused is False:  # Vérifier que la touche gauche est pressée, que
             #et que le joueur ne dépasse pas la bordure gauche
             self.player.move_left()  # Si c'est le cas déplacer le joueur à gauche
+
+        elif self.pressed.get(pygame.K_m):
+            if self.sound_manager.sound:
+                self.sound_manager.sound = False
+
+            else:
+                self.sound_manager.sound = True
