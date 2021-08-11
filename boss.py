@@ -29,6 +29,10 @@ class Boss(pygame.sprite.Sprite): #Créer la classe du boss
         self.speed_moving_y = 2.5
 
     """Définir les fonctions"""
+    def check_version(self):
+        if self.game.version < 1.01 and self.game.level == 11:
+            self.game.end()
+
     def damage(self, amount): #Définir la fonction pour infliger des dégâts au boss
         self.health -= amount #Enlever les points de vies du boss
         if self.health == 0: #Action s'exécutant si le boss n'a plus de vies
@@ -52,5 +56,6 @@ class Boss(pygame.sprite.Sprite): #Créer la classe du boss
             self.game.player.damage(self.attack)  # Infliger des dégâts aux monstres
 
     def update_health_bar(self, surface): #Créer la fonction pour actualiser la barre de vies
-        pygame.draw.rect(surface, (60, 63, 60), [self.rect.x, self.rect.y - 20, self.max_health, 5]) #Créer l'arrière-plan de la barre de vies
-        pygame.draw.rect(surface, (111, 210, 46), [self.rect.x, self.rect.y - 20, self.health, 5]) #Créer la barre de vies
+        if self.game.version >= 1.01:
+            pygame.draw.rect(surface, (60, 63, 60), [self.rect.x, self.rect.y - 20, self.max_health, 5]) #Créer l'arrière-plan de la barre de vies
+            pygame.draw.rect(surface, (111, 210, 46), [self.rect.x, self.rect.y - 20, self.health, 5]) #Créer la barre de vies

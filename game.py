@@ -16,6 +16,7 @@ pygame.init()
 class Game: #Créer la classe du jeu
     """Définir les attributs du jeu"""
     def __init__(self): #Créer le constructeur de la classe
+        self.version = None
         self.is_playing = False #Dire que le jeu n'as pas commencé
         self.end_game = False #Signaler que le jeu n'est pas terminé
         self.all_players = pygame.sprite.Group() #Créer le groupe du joueur
@@ -35,28 +36,36 @@ class Game: #Créer la classe du jeu
         self.end_text = self.font.render("Congratulations ! You have completed the game !!!", 1,(0, 0, 0))  # Créer le texte des vies globales
         self.general_data = {}
         self.infinite = False
-        self.recovback()
 
     def register(self):
-        if self.infinite is False:
+        if self.infinite is False and self.version >= 1.02:
             self.general_data["level"] = self.level
             self.general_data["lives"] = self.life
             with open("data.json", "w") as database:
                 json.dump(self.general_data, database)
 
     def pause(self):
-        if self.paused is False:
-            self.paused = True
+        if self.version >= 1.03:
+            if self.paused is False:
+                self.paused = True
 
-        else:
-            self.paused = False
+            else:
+                self.paused = False
 
     def recovback(self):
-        if self.infinite is False:
+        if self.infinite is False and self.version >= 1.02:
             database = open("data.json").read()
             data = json.loads(database)
             self.level = data["level"]
             self.life = data["lives"]
+
+        elif self.version >= 1.00 and self.version < 1.02:
+            self.level = 1
+            self.life = 3
+
+        elif self.infinite or self.version < 1.00:
+            self.level = ""
+            self.life = 3
 
     def spawn_boss(self):
         self.all_boss.add(self.boss)  # Ajouter un boss au groupe de boss
@@ -66,8 +75,9 @@ class Game: #Créer la classe du jeu
         self.all_monsters.add(monster_name.__call__(self)) #Ajouter des monstres au groupe
 
     def start(self): #Méthode pour lancer le jeu
+        self.recovback()
+        self.is_playing = True  # Lancer le jeu
         if self.infinite is False:
-            self.is_playing = True #Lancer le jeu
             """Faire spawner les monstres en fonction du niveau"""
             if self.level == 1:  # Action s'exécutant si on est au niveau 1
                 self.spawn_monster(Mummy)
@@ -80,7 +90,7 @@ class Game: #Créer la classe du jeu
                 self.spawn_monster(Alien)  # Faire apparaître un alien
 
 
-            elif self.level == 10:
+            elif self.level == 10 and self.version >= 1.01:
                 self.all_monsters = pygame.sprite.Group()
                 self.spawn_boss()
 
@@ -90,7 +100,6 @@ class Game: #Créer la classe du jeu
                 self.spawn_monster(Alien)  # Faire apparaître un alien
 
         else:
-            self.is_playing = True
             self.spawn_monster(Mummy)  # Faire apparaître un momie
             self.spawn_monster(Mummy)  # Faire apparaître un momie
             self.spawn_monster(Alien)  # Faire apparaître un alien
@@ -108,7 +117,6 @@ class Game: #Créer la classe du jeu
             self.level = 1
 
     def block_projectile(self):
-        print(self.comet_event.fall_mode)
         if self.boss.rect.x == 800:
             self.projectile = False
 
@@ -164,15 +172,16 @@ class Game: #Créer la classe du jeu
         self.all_monsters.draw(screen)  # Afficher les monstres sur la fenêtre
         self.comet_event.all_comets.draw(screen) #Dessiner sur la fenêtre les comètes
         if self.end_game is False:
-            screen.blit(self.score_text, (20, 20))  # Dessiner le texte du score
             if self.infinite:
+                screen.blit(self.score_text, (20, 20))  # Dessiner le texte du score
                 screen.blit(self.life_text, (20, 60))  # Dessiner le texte des vies globales
 
             elif self.infinite is False:
+                screen.blit(self.score_text, (20, 20))  # Dessiner le texte du score
                 screen.blit(self.level_text, (20, 60))  # Dessiner le texte du niveau
                 screen.blit(self.life_text, (20, 100))  # Dessiner le texte des vies globales
 
-        if self.level == 10:
+        if self.level == 10 and self.version >= 1.01:
             screen.blit(self.boss.image, self.boss.rect)  # Afficher le joueur sur la fenêtre
 
         """Actualiser les barres"""
@@ -191,7 +200,7 @@ class Game: #Créer la classe du jeu
             comet.fall() #Faire tomber la pluie de comètes
 
         """Appeler les évènements d'action du boss"""
-        if self.level == 10:
+        if self.level == 10 and self.version >= 1.01:
             self.boss.go_and_back()
             self.boss.fly()
             self.block_projectile()
@@ -215,10 +224,3 @@ class Game: #Créer la classe du jeu
         elif self.pressed.get(pygame.K_LEFT) and self.player.rect.x > 0 and self.paused is False:  # Vérifier que la touche gauche est pressée, que
             #et que le joueur ne dépasse pas la bordure gauche
             self.player.move_left()  # Si c'est le cas déplacer le joueur à gauche
-
-        elif self.pressed.get(pygame.K_m):
-            if self.sound_manager.sound:
-                self.sound_manager.sound = False
-
-            else:
-                self.sound_manager.sound = True
